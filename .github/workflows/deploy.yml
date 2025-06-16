@@ -6,13 +6,10 @@ on:
       - dev
       - test
       - uat
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    environment: 
-      name: ${{ github.ref_name }}
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     env:
       AZURE_WEBAPP_PACKAGE_PATH: '.'
@@ -36,10 +33,26 @@ jobs:
       - name: Publish
         run: dotnet publish -c Release -o publish_output
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy to Azure Web App (Dev)
+        if: github.ref_name == 'dev'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ fromJSON('{"dev":"your-webapp-dev","test":"your-webapp-dev","uat":"demo-web28"}')[github.ref_name] }}
-          publish-profile: ${{ secrets[format('AZURE_WEBAPP_PUBLISH_PROFILE_{0}', upper(github.ref_name))] }}
+          app-name: your-webapp-dev
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
+          package: publish_output
+
+      - name: Deploy to Azure Web App (Test)
+        if: github.ref_name == 'test'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: your-webapp-dev
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_TEST }}
+          package: publish_output
+
+      - name: Deploy to Azure Web App (UAT)
+        if: github.ref_name == 'uat'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: demo-web28
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
           package: publish_output
