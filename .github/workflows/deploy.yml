@@ -1,3 +1,11 @@
+name: Deploy to Azure App Service - Multi Environment
+
+on:
+  push:
+    branches:
+      - dev
+      - test
+      - uat
 jobs:
   deploy:
     runs-on: ubuntu-latest
