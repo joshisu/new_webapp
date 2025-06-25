@@ -5,6 +5,6 @@
 <title>Hello World</title>
 </head>
 <body>
-<h1>Hello from azure Web App!</h1>
+<h1>Hello from azure Dev Web App!</h1>
 </body>
 </html>
