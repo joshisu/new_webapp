@@ -38,3 +38,4 @@ jobs:
           app-name: demo-web28
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
           package: .
+          
